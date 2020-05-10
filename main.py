@@ -164,11 +164,11 @@ class Bird(Enemy):
 # function to draw window for every frame
 
 
-def redraw_window(dino, base, cactii, score):
+def redraw_window(dino, base, enemies, score):
     win.fill((220, 220, 220))
     dino.draw(win)
     base.draw(win)
-    for cactus in cactii:
+    for cactus in enemies:
         cactus.draw(win)
     text = STAT_FONT.render('Score:  ' + str(score), 1, (10, 10, 10))
     win.blit(text, (WIN_WIDTH - 10 - text.get_width(), 10))
@@ -187,14 +187,14 @@ def main():
     clock = pygame.time.Clock()
     base = Base(245)
     run = True
-    cactii = [Cactus(600)]
+    enemies = [Cactus(600)]
     dino = Dino(20, 200)
     score = 0
     while run:
         dino.jumpImg = isJump
         score += 1
         base.move()
-        for cactus in cactii:
+        for cactus in enemies:
             cactus.move()
             if cactus.collide(dino):
                 run = False
@@ -205,7 +205,7 @@ def main():
                 pygame.quit()
                 quit()
 
-        redraw_window(dino, base, cactii, score)
+        redraw_window(dino, base, enemies, score)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
             isJump = True
@@ -227,14 +227,14 @@ def main():
                 jumpCount = 8
                 isJump = False
         # adding new enemies if old ones have left the screen
-        for enemy in cactii:
+        for enemy in enemies:
             if enemy.passed(dino):
-                cactii.remove(enemy)
+                enemies.remove(enemy)
                 choose = random.choice(['bird', 'cactus'])
                 if choose == 'bird':
-                    cactii.append(Bird())
+                    enemies.append(Bird())
                 else:
-                    cactii.append(Cactus(600))
+                    enemies.append(Cactus(600))
     # adding some after game clean-up code
     if not run:
         while True:
